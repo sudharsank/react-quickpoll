@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "f7bf2d8a-e530-4bba-a11f-6b2a8ee7f913",
+  "alias": "QuickPollWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "SPFx" },
+    "title": { "default": "QuickPoll" },
+    "description": { "default": "A Quick Poll using the survey list." },
+    "officeFabricIconFontName": "SunQuestionMark",
+    "properties": {
+      "description": "QuickPoll"
+    }
+  }]
+}
