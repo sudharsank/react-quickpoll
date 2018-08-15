@@ -6,6 +6,8 @@ import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField
 } from '@microsoft/sp-webpart-base';
+import { CalloutTriggers } from '@pnp/spfx-property-controls/lib/PropertyFieldHeader';
+import { PropertyFieldChoiceGroupWithCallout } from '@pnp/spfx-property-controls/lib/PropertyFieldChoiceGroupWithCallout';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/components/Dropdown';
 import { update, get } from '@microsoft/sp-lodash-subset';
 /** SP PnP Reference */
@@ -54,6 +56,7 @@ export default class QuickPollWebPart extends BaseClientSideWebPart<IQuickPollWe
         displayMode: this.displayMode,
         listID: this.properties.listID,
         question: this.properties.question,
+        chartType: this.properties.chartType,
         serviceScope: this.context.serviceScope
       }
     );
@@ -141,13 +144,13 @@ export default class QuickPollWebPart extends BaseClientSideWebPart<IQuickPollWe
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     // reference to item dropdown needed later after selecting a list
     this.questionsDropDown = new PropertyPaneAsyncDropdown('question', {
-      label: "Select Question",
+      label: strings.QuestFieldLabel,
       loadOptions: this.loadQuestions.bind(this),
       onPropertyChange: this.onQuestionChange.bind(this),
       selectedKey: this.properties.question,
       // should be disabled if no list has been selected
       disabled: !this.properties.listID,
-      loadingText: "Loading Questions..."
+      loadingText: strings.QuestFieldLoadingText
     });
     return {
       pages: [
@@ -164,9 +167,24 @@ export default class QuickPollWebPart extends BaseClientSideWebPart<IQuickPollWe
                   loadOptions: this.loadLists.bind(this),
                   onPropertyChange: this.onListChange.bind(this),
                   selectedKey: this.properties.listID,
-                  loadingText: "Loading Survey Lists..."
+                  loadingText: strings.ListFieldLoadingText
                 }),
-                this.questionsDropDown
+                this.questionsDropDown,
+                PropertyFieldChoiceGroupWithCallout('chartType', {
+                  calloutContent: React.createElement('div', {}, strings.ChartFieldCalloutText),
+                  calloutTrigger: CalloutTriggers.Hover,
+                  key: 'choice_charttype',
+                  label: strings.ChartFieldLabel,                  
+                  options: [{
+                    key: 'pie',
+                    text: 'Pie',
+                    checked: this.properties.chartType === 'bar'
+                  }, {
+                    key: 'donut',
+                    text: 'Donut',
+                    checked: this.properties.chartType === 'donut'
+                  }]
+                })
               ]
             }
           ]

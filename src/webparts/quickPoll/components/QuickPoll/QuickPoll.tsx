@@ -7,7 +7,6 @@ import {
   EnvironmentType
 } from '@microsoft/sp-core-library';
 import { escape } from '@microsoft/sp-lodash-subset';
-import { PrimaryButton, DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import * as strings from 'QuickPollWebPartStrings';
 import Chart from 'chart.js';
 import { IQuickPollProps } from './IQuickPollProps';
@@ -15,6 +14,7 @@ import { IQuickPollState } from './IQuickPollState';
 import { IPollService } from '../../../../Interfaces/IPollService';
 import { PollService } from '../../../../DataProviders/PollService';
 import ConfigContainer from '../configContainer/ConfigContainer';
+import { IQuestionDetails, IResponseDetails } from '../../../../Models';
 
 
 export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPollState> {
@@ -35,10 +35,10 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
     });
   }
   public render(): React.ReactElement<IQuickPollProps> {
-    const { displayMode, listName, question } = this.props;    
+    const { displayMode, listID, question, chartType } = this.props;
     return (
       <div className={styles.quickPoll}>
-        {displayMode === DisplayMode.Edit && (!listName || !question) && 
+        {displayMode === DisplayMode.Edit && (!listID || !question || !chartType) &&
           <ConfigContainer
             buttonText={strings.Configure_ButtonText}
             currentContext={this.props.currentContext}
@@ -46,7 +46,7 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
             iconText={strings.Configure_IconText}
             displayButton={true} />
         }
-        {(!listName || !question) && displayMode === DisplayMode.Read &&
+        {(!listID || !question || !chartType) && displayMode === DisplayMode.Read &&
           <ConfigContainer
             buttonText={strings.Configure_ButtonText}
             currentContext={this.props.currentContext}
@@ -55,10 +55,11 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
             displayButton={false} />
         }
         {/* <canvas id="myChart" max-width="400" max-height="300"></canvas> */}
-        {listName && question &&
+        {listID && question && chartType &&
           <div>
-            ListName: {this.props.listName}
-            Question: {this.props.question}
+            <div>ListName: {listID}</div>
+            <div>Question: {question}</div>
+            <div>Chart Type: {chartType}</div>
           </div>
         }
       </div>
@@ -66,6 +67,16 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
   }
 
   public componentDidMount(): void {
+
+    this.pollservice.getPollQuestionById(this.props.listID, this.props.question)
+      .then((questInfo: IQuestionDetails) => {
+        console.log('Question Info: ', questInfo);
+        this.pollservice.getPollResponses(this.props.listID, questInfo)
+          .then((responses: IResponseDetails[]) => {
+            console.log('Responses: ', responses);
+          });
+      })
+
     // var ctx = "myChart";
     // var myChart = new Chart(ctx, {
     //   type: 'bar',

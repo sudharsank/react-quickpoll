@@ -18,6 +18,10 @@ export interface IQuickPollProps {
    */
   question: string;
   /**
+   * Chart type
+   */
+  chartType: string;
+  /**
    * Service scope
    */
   serviceScope: ServiceScope;

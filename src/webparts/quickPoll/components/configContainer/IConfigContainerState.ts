@@ -1,4 +1,3 @@
-import {ISettings} from '../../../../Models/ISettings';
 export interface IConfigContainerState {
    showPanel: boolean;
    dirty: boolean;
@@ -6,5 +5,4 @@ export interface IConfigContainerState {
    isSaved: boolean;
    isEdit: boolean;
    isOverlayShow: boolean;
-   PollSettings: ISettings;
 }
