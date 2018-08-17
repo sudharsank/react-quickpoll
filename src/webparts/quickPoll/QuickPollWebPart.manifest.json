@@ -9,11 +9,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
     "group": { "default": "SPFx" },
-    "title": { "default": "QuickPoll" },
+    "title": { "default": "Quick Poll" },
     "description": { "default": "A Quick Poll using the survey list." },
     "officeFabricIconFontName": "SunQuestionMark",
     "properties": {
-      "description": "QuickPoll"
+      
     }
   }]
 }

@@ -1,4 +1,4 @@
-import { sp } from '@pnp/sp';
+import { sp, ItemAddResult } from '@pnp/sp';
 import { IPollService } from '../Interfaces/IPollService';
 import { IListDetails, IQuestionDetails, IResponseDetails } from '../Models';
 import { ServiceScope, ServiceKey } from '@microsoft/sp-core-library';
@@ -84,10 +84,36 @@ export class PollService implements IPollService {
   public getPollResponses(listID: string, questionInfo: IQuestionDetails): Promise<IResponseDetails[]> {
     return new Promise<IResponseDetails[]>((resolve: (questionInfo: IResponseDetails[]) => void, reject: (error: any) => void): void => {
       let retResponses: IResponseDetails[] = [];
-      sp.web.lists.getById(listID).items.select(questionInfo.InternalName, "Author/Id", "Author/Title").expand("Author").getAll()
+      sp.web.lists.getById(listID).items.select(questionInfo.InternalName, "Author/Id", "Author/Title").expand("Author")
+        //.filter(`${questionInfo.InternalName} eq `)
+        .getAll()
         .then((responses: any) => {
-          console.log(responses);
+          if (responses.length > 0) {
+            responses.map((pollResponse: any) => {
+              retResponses.push({
+                UserID: pollResponse.Author.Id,
+                UserName: pollResponse.Author.Title,
+                PollResponse: pollResponse[questionInfo.InternalName],
+                PollQuestion: questionInfo.DisplayName,
+                PollQuestionIN: questionInfo.InternalName
+              });
+            })
+          }
+          resolve(retResponses);
         })
+    });
+  }
+
+  public submitPollResponse(listID: string, responseInfo: IResponseDetails): Promise<boolean> {
+    return new Promise<boolean>((resolve: (retResponse: boolean) => void, reject: (error: any) => void): void => {
+      sp.web.lists.getById(listID).items.add({
+        [responseInfo.PollQuestionIN]: responseInfo.PollResponse
+      }).then((ResAdd: ItemAddResult) => {
+        resolve(true);
+      }, (error: any): void => {
+        reject(false);
+        console.log(error);
+      });
     });
   }
 }

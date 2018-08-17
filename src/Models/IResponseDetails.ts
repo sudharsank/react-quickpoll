@@ -3,4 +3,5 @@ export interface IResponseDetails {
   UserName: string;
   PollResponse: string;
   PollQuestion: string;
+  PollQuestionIN: string;
 }

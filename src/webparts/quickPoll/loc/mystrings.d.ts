@@ -13,6 +13,9 @@ declare interface IQuickPollWebPartStrings {
   QuestFieldLoadingText: string;
   ChartFieldLabel: string;
   ChartFieldCalloutText: string;
+  //
+  SuccessfullVoteSubmission: string;
+  FailedVoteSubmission: string;
 }
 
 declare module 'QuickPollWebPartStrings' {

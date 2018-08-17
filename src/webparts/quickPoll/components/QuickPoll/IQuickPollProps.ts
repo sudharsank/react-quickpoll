@@ -25,4 +25,5 @@ export interface IQuickPollProps {
    * Service scope
    */
   serviceScope: ServiceScope;
+  domElement: HTMLElement;
 }

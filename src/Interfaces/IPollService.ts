@@ -4,4 +4,5 @@ export interface IPollService {
    getPollQuestions(listId: string): Promise<IQuestionDetails[]>;
    getPollQuestionById(listID: string, questionID: string): Promise<IQuestionDetails>;
    getPollResponses(listID: string, questionInfo: IQuestionDetails): Promise<IResponseDetails[]>;
+   submitPollResponse(listID: string, responseInfo: IResponseDetails): Promise<boolean>;
 }

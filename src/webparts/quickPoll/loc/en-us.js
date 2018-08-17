@@ -13,6 +13,9 @@ define([], function() {
     "QuestFieldLabel": "Select Question",
     "QuestFieldLoadingText": "Loading Questions...",
     "ChartFieldLabel": "Preferred Chart Type",
-    "ChartFieldCalloutText": "Select preferrable chart type"
+    "ChartFieldCalloutText": "Select preferrable chart type",
+    //
+    "SuccessfullVoteSubmission": "Thank you for your submission",
+    "FailedVoteSubmission": "Sorry, something wrong while submitting. Please try again after sometime.",
   }
 });

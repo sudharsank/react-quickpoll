@@ -52,11 +52,10 @@ export default class QuickPollWebPart extends BaseClientSideWebPart<IQuickPollWe
     const element: React.ReactElement<IQuickPollProps> = React.createElement(
       QuickPoll,
       {
+        ...this.properties,
+        domElement: this.context.domElement,
         currentContext: this.context,
         displayMode: this.displayMode,
-        listID: this.properties.listID,
-        question: this.properties.question,
-        chartType: this.properties.chartType,
         serviceScope: this.context.serviceScope
       }
     );
@@ -174,15 +173,24 @@ export default class QuickPollWebPart extends BaseClientSideWebPart<IQuickPollWe
                   calloutContent: React.createElement('div', {}, strings.ChartFieldCalloutText),
                   calloutTrigger: CalloutTriggers.Hover,
                   key: 'choice_charttype',
-                  label: strings.ChartFieldLabel,                  
-                  options: [{
+                  label: strings.ChartFieldLabel,
+                  options: [
+                  // {
+                  //   key: 'bar',
+                  //   text: 'Bar',
+                  //   checked: this.properties.chartType === 'bar',
+                  //   //iconProps: { officeFabricIconFontName: 'Add' }
+                  // }, 
+                  {
                     key: 'pie',
                     text: 'Pie',
-                    checked: this.properties.chartType === 'bar'
+                    checked: this.properties.chartType === 'pie',
+                    //iconProps: { officeFabricIconFontName: 'PieSingle' }
                   }, {
-                    key: 'donut',
-                    text: 'Donut',
-                    checked: this.properties.chartType === 'donut'
+                    key: 'doughnut',
+                    text: 'Doughnut',
+                    checked: this.properties.chartType === 'doughnut',
+                    //iconProps: { officeFabricIconFontName: 'DonutChart' }
                   }]
                 })
               ]
