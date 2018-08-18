@@ -1,7 +1,9 @@
 import { sp, ItemAddResult } from '@pnp/sp';
 import { IPollService } from '../Interfaces/IPollService';
 import { IListDetails, IQuestionDetails, IResponseDetails } from '../Models';
+import { Constants } from '../common/constants';
 import { ServiceScope, ServiceKey } from '@microsoft/sp-core-library';
+import _ from 'underscore';
 
 export class PollService implements IPollService {
 
@@ -33,18 +35,26 @@ export class PollService implements IPollService {
    * @param listId 
    */
   public getPollQuestions(listId: string): Promise<IQuestionDetails[]> {
+    var FieldTypes = new Constants().FieldTypes;
     return new Promise<IQuestionDetails[]>((resolve: (questionDetails: IQuestionDetails[]) => void, reject: (error: any) => void): void => {
       let retQuestDetails: IQuestionDetails[] = [];
       sp.web.lists.getById(listId).fields
-        .filter("FieldTypeKind eq 6 && Hidden eq false")
+        //.filter("FieldTypeKind eq 6 && Hidden eq false")
+        .filter("Hidden eq false")
         .get()
         .then((fields: any[]) => {
           if (fields.length > 0) {
-            fields.map((field, index) => {
+            var ids = {};
+            _.each(FieldTypes, function (bb) { ids[bb.FieldTypeKind] = true; });
+            var fieldsToSelect = _.filter(fields, function (val) {
+              return ids[val.FieldTypeKind];
+            }, FieldTypes);
+            fieldsToSelect.map((field, index) => {
               retQuestDetails.push({
                 Id: field.Id,
                 DisplayName: field.Title,
-                InternalName: field.InternalName
+                InternalName: field.InternalName,
+                FieldType: field.FieldTypeKind
               });
             });
           }
@@ -68,8 +78,9 @@ export class PollService implements IPollService {
               Id: questInfo.Id,
               DisplayName: questInfo.Title,
               InternalName: questInfo.InternalName,
-              Choices: questInfo.Choices
-            }
+              Choices: questInfo.Choices,
+              FieldType: questInfo.FieldTypeKind
+            };
           }
           resolve(retQuestInfo);
         });

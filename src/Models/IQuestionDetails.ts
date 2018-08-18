@@ -3,4 +3,5 @@ export interface IQuestionDetails {
    DisplayName: string;
    InternalName: string;
    Choices?: string[];
+   FieldType?: number;
 }

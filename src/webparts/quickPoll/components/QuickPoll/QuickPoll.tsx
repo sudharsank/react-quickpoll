@@ -23,6 +23,7 @@ import { IQuestionDetails, IResponseDetails, IPollAnalyticsInfo } from '../../..
 import QuickPollChart from '../chartContainer/QuickPollChart';
 import MessageContainer from '../MessageContainer/MessageContainer';
 import { MessageScope } from '../../../../common/enumHelper';
+import OptionsContainer from '../OptionsContainer/OptionsContainer';
 
 
 
@@ -49,7 +50,7 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
       isError: false,
       MsgContent: "",
       showSubmissionProgress: false
-    }
+    };
 
     let _serviceScope: ServiceScope;
     _serviceScope = this.props.serviceScope;
@@ -95,7 +96,16 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
             <div className="ms-Grid-row">
               <div className="ms-Grid-col ms-lg12 ms-md12 ms-sm12">
                 <div className="ms-textAlignLeft ms-font-m-plus ms-fontWeight-semibold">
-                  <ChoiceGroup disabled={!this.state.enableChoices} selectedKey={this._getSelectedKey()} options={this.onRenderChoiceOptions()} required={true} label="Pick one" onChange={this._onChange} />
+                  {/* <ChoiceGroup disabled={!this.state.enableChoices} 
+                  selectedKey={this._getSelectedKey()}
+                  options={this.onRenderChoiceOptions()} required={true} label="Pick one" 
+                  onChange={this._onChange} /> */}
+                  <OptionsContainer disabled={!this.state.enableChoices}
+                    selectedKey={this._getSelectedKey}
+                    options={this.state.PollQuestions[0].Choices}
+                    label="Pick One" 
+                    onChange={this._onChange}
+                    FieldTypeKind={this.state.PollQuestions[0].FieldType}/>
                 </div>
               </div>
             </div>
@@ -156,7 +166,7 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
       PollResponse: option.key,
       UserID: this.props.currentContext.pageContext.user.loginName,
       UserName: this.props.currentContext.pageContext.user.displayName
-    }
+    };
     if (prevUserResponse.length > 0) {
       let filRes = this.getUserResponse(prevUserResponse);
       //prevUserResponse.filter((response) => { return response.UserID == this.props.currentContext.pageContext.user.loginName });
@@ -174,13 +184,13 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
     });
   }
 
-  private _getSelectedKey(): string {
+  private _getSelectedKey = (): string => {
     let selKey: string = "";
-    if (this.state.UserResponse.length > 0) {
+    if (this.state.UserResponse && this.state.UserResponse.length > 0) {
       var userResponses = this.state.UserResponse;
       var userRes = this.getUserResponse(userResponses);
       if (userRes.length > 0) {
-        selKey = userRes[0].PollResponse
+        selKey = userRes[0].PollResponse;
       }
     }
     return selKey;
@@ -226,7 +236,7 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
     if (this.state.UserResponse.length > 0) {
       var curUserRes = this.state.UserResponse.filter((cuRes) => {
         return cuRes.UserName == this.props.currentContext.pageContext.user.displayName &&
-          (cuRes.PollResponse !== null && cuRes.PollResponse != "" && undefined !== cuRes.PollResponse)
+          (cuRes.PollResponse !== null && cuRes.PollResponse != "" && undefined !== cuRes.PollResponse);
       });
       //console.log(curUserRes);
       if (curUserRes.length > 0) {
@@ -237,7 +247,7 @@ export default class QuickPoll extends React.Component<IQuickPollProps, IQuickPo
         var tempData = _.countBy(this.state.UserResponse, 'PollResponse');
         //console.log("Temp data: ", tempData);
         var data = [];
-        this.state.PollQuestions[0].Choices.map(function (label) {
+        this.state.PollQuestions[0].Choices.map((label) => {
           if (tempData[label] == undefined) {
             data.push(0);
           } else data.push(tempData[label]);
